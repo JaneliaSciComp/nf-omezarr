@@ -1,0 +1,4 @@
+id,image,output_path,mip_xy
+file1,/path/to/bioformats/compatible/file1.tiff,/path/to/output,/path/to/xy/mip1.png
+file2,/path/to/bioformats/compatible/file2.tiff,path/to/output/relative/to/outdir,mip2.png
+file3,/path/to/bioformats/compatible/file3.tiff,,

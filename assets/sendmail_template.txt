@@ -1,0 +1,5 @@
+To: $email
+Subject: $subject
+Content-Type: text/html; charset=utf-8
+
+$email_html

@@ -1,0 +1,33 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/nf-core/modules/master/subworkflows/yaml-schema.json
+name: rs_fish
+description: Precise, interactive, fast, and scalable FISH spot detection
+keywords:
+  - spatial transcriptomics
+  - spatial genomics
+  - FISH
+components: []
+
+input:
+  - ch_meta:
+      type: tuple
+      description: |
+        Channel of tuples containing a meta map
+        Structure: [ val(meta), path(input_image), val(input_dataset), val(spark) ]
+
+output:
+  - params:
+      type: tuple
+      description: |
+        Same as the input tuple
+  - csv:
+      type: file
+      description: |
+        Output CSV file
+  - versions:
+      type: file
+      description: File containing software versions
+      pattern: "versions.yml"
+
+authors:
+  - "@krokicki"
+  - "@cgoina"

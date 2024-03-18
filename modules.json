@@ -1,0 +1,42 @@
+{
+  "name": "JaneliaSciComp/nf-omezarr",
+  "homePage": "https://github.com/JaneliaSciComp/nf-omezarr",
+  "repos": {
+    "git@github.com:JaneliaSciComp/nextflow-modules.git": {
+      "modules": {
+        "janelia": {
+          "rs_fish": {
+            "branch": "main",
+            "git_sha": "959adfff0862410b9753faa492906aa5655b611d",
+            "installed_by": ["modules"]
+          }
+        }
+      },
+      "subworkflows": {
+        "janelia": {
+          "spark_start": {
+            "branch": "main",
+            "git_sha": "8f4d47f5d02c5ddfa07f1cdfb93f6d6dd97a08de",
+            "installed_by": ["subworkflows"]
+          },
+          "spark_stop": {
+            "branch": "main",
+            "git_sha": "8f4d47f5d02c5ddfa07f1cdfb93f6d6dd97a08de",
+            "installed_by": ["subworkflows"]
+          }
+        }
+      }
+    },
+    "https://github.com/nf-core/modules.git": {
+      "modules": {
+        "nf-core": {
+          "custom/dumpsoftwareversions": {
+            "branch": "master",
+            "git_sha": "8ec825f465b9c17f9d83000022995b4f7de6fe93",
+            "installed_by": ["modules"]
+          }
+        }
+      }
+    }
+  }
+}
