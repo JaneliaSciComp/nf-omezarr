@@ -7,14 +7,12 @@ process BIOFORMATS2RAW {
     input:
     tuple val(meta),
           path(input_image),
-          path(output_path),
-          path(mip_xy)
+          path(output_path)
 
     output:
     tuple val(meta),
           path(input_image),
           path(zarr_output_path),
-          path(mip_xy),
           emit: params
     path "versions.yml", emit: versions
 

@@ -36,7 +36,18 @@
                     "type": "string",
                     "description": "Extra options for Bioformats2raw",
                     "help": "Options can be found here: https://github.com/glencoesoftware/bioformats2raw/blob/master/src/main/java/com/glencoesoftware/bioformats2raw/Converter.java",
+                    "fa_icon": "fas fa-terminal"
+                },
+                "chunk_size": {
+                    "type": "string",
+                    "description": "Chunk size for Zarr in X,Y,Z order. Default: 128,128,128",
                     "fa_icon": "fas fa-cube"
+                },
+                "compression": {
+                    "type": "string",
+                    "description": "How the blocks will be compressed. Default: blosc",
+                    "fa_icon": "fas fa-file-archive",
+                    "enum": ["zlib", "blosc"]
                 },
                 "cpus": {
                     "type": "integer",

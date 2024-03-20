@@ -55,6 +55,7 @@ log.info logo + paramsSummaryLog(workflow) + citation
 */
 
 include { BIOFORMATS2RAW              } from './modules/janelia/bioformats2raw/main'
+include { NGFFBROWSEIMPORTER          } from './modules/janelia/ngffbrowseimporter/main'
 include { CUSTOM_DUMPSOFTWAREVERSIONS } from './modules/nf-core/custom/dumpsoftwareversions/main'
 
 workflow TO_OMEZARR {
@@ -63,29 +64,49 @@ workflow TO_OMEZARR {
     Channel
         .fromSamplesheet("input")
         .map {
-            def (meta, image, output_path, mip_xy) = it
+            def (meta, image, output_path, projection) = it
 
-            def abs_output_path = output_path
-            if (!abs_output_path.startsWith('/')) {
-                abs_output_path = new File(params.outdir, output_path).getAbsolutePath()
+            def abs_output_path = params.outdir
+            if (output_path && !output_path.isEmpty()) {
+                abs_output_path = output_path
+                if (!abs_output_path.startsWith('/')) {
+                    abs_output_path = new File(params.outdir, output_path).getAbsolutePath()
+                }
+                abs_output_f = new File(abs_output_path)
+                if (!abs_output_f.exists()) {
+                    abs_output_f.mkdirs()
+                }
             }
 
-            abs_output_f = new File(abs_output_path)
-            if (!abs_output_f.exists()) {
-                abs_output_f.mkdirs()
+            def abs_projection = null
+            if (projection && !projection.isEmpty()) {
+                abs_projection = projection
+                if (!abs_projection.startsWith('/')) {
+                    abs_projection = new File(image.getParent(), projection)
+                }
             }
 
-            def abs_mip_xy = mip_xy
-            if (!abs_mip_xy.startsWith('/')) {
-                abs_mip_xy = new File(image.getParent(), mip_xy)
-            }
-
-            [meta, image, abs_output_path, abs_mip_xy]
+            [meta, image, abs_output_path, abs_projection]
         }
         .set { ch_input }
 
-    BIOFORMATS2RAW(ch_input)
+    // Convert to OME-Zarr
+    BIOFORMATS2RAW(ch_input.map {
+        def (meta, image, abs_output_path, abs_projection) = it
+        [meta, image, abs_output_path]
+    })
     ch_versions = ch_versions.mix(BIOFORMATS2RAW.out.versions)
+
+    // Join with the input to map zarr paths to projections
+    zarrs = BIOFORMATS2RAW.out.params.join(ch_input).map {
+        def (meta, image, zarr_path, image2, abs_output_path, abs_projection) = it
+        [meta, zarr_path, abs_projection]
+    }
+    .filter { it[2] != null }
+
+    // Assign projections to zarrs
+    NGFFBROWSEIMPORTER(zarrs)
+    ch_versions = ch_versions.mix(NGFFBROWSEIMPORTER.out.versions)
 
     //
     // MODULE: Pipeline reporting
