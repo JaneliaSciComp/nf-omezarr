@@ -1,28 +1,27 @@
 # yaml-language-server: $schema=https://raw.githubusercontent.com/nf-core/modules/master/subworkflows/yaml-schema.json
-name: rs_fish
-description: Precise, interactive, fast, and scalable FISH spot detection
+name: bioformats2raw
+description: Convert any Bioformats-compatible image to OME-Zarr format
 keywords:
-  - spatial transcriptomics
-  - spatial genomics
-  - FISH
+  - image formats
+  - converter
+  - OME-Zarr
 components: []
 
 input:
   - ch_meta:
       type: tuple
       description: |
-        Channel of tuples containing a meta map
-        Structure: [ val(meta), path(input_image), val(input_dataset), val(spark) ]
+        Channel of tuples containing a meta map, the input image, and an 
+        output path where the OME-Zarr should be created.
+        Structure: [ val(meta), path(input_image), val(output_path) ]
 
 output:
   - params:
       type: tuple
       description: |
-        Same as the input tuple
-  - csv:
-      type: file
-      description: |
-        Output CSV file
+        Same as the input tuple but replaces output path with the OME-Zarr that 
+        was created.
+        Structure: [ val(meta), path(input_image), val(zarr_output_path) ]
   - versions:
       type: file
       description: File containing software versions
@@ -30,4 +29,3 @@ output:
 
 authors:
   - "@krokicki"
-  - "@cgoina"
