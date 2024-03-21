@@ -9,7 +9,7 @@
             "title": "Pipeline options",
             "type": "object",
             "fa_icon": "fas fa-terminal",
-            "description": "Define the input data and RS-FISH parameters.",
+            "description": "Define the input data and bioformats2raw parameters.",
             "required": [
                 "input",
                 "outdir"
