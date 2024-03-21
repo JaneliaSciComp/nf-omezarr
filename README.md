@@ -1,6 +1,6 @@
-# OME-Zarr Converter 
+# OME-Zarr Conversion Pipeline
 
-Nextflow pipeline that converts Bioformats-compatible images to [NGFF](https://github.com/ome/ngff) (e.g. OME-Zarr) images using [bioformats2raw](https://github.com/glencoesoftware/bioformats2raw). Also generates metadata for [ngffbrowse](https://github.com/JaneliaSciComp/ngffbrowse).
+Nextflow pipeline which converts Bioformats-compatible images to [NGFF](https://github.com/ome/ngff) (e.g. OME-Zarr) format using [bioformats2raw](https://github.com/glencoesoftware/bioformats2raw). Also generates metadata for [ngffbrowse](https://github.com/JaneliaSciComp/ngffbrowse).
 
 ## Quick Start
 
@@ -22,7 +22,7 @@ Now you can run the pipeline and it will download everything else it needs. Firs
 
 samplesheet.csv:
 
-```
+```csv
 id,image,output_path,projection_xy
 image1,/path/to/image1.czi,subpath,/path/to/image1_mip.png
 image2,/path/to/image2.czi,subpath,/path/to/image2_mip.png
@@ -33,11 +33,17 @@ Each row represents one input image in any Bioformats-compatible format (Zeiss C
 
 The following command will analyze one input image in N5 format and save a CSV of detected spots to the `./output` directory. 
 
-    nextflow run JaneliaSciComp/nf-omezarr -profile singularity --input samplesheet.csv --outdir ./output --compression zlib --cpus 40
+```bash
+    nextflow run JaneliaSciComp/nf-omezarr -profile singularity \
+        --input samplesheet.csv --outdir ./output --compression zlib --cpus 40
+```
 
 By default, the Zarr chunk size is set to 128,128,128. You can customize the chunk size of the zarr using the `--chunk_size` parameter, e.g.
 
-    nextflow run JaneliaSciComp/nf-omezarr -profile singularity --input samplesheet.csv --outdir ./output --chunk_size 1920,1920,1 
+```bash
+    nextflow run JaneliaSciComp/nf-omezarr -profile singularity \
+        --input samplesheet.csv --outdir ./output --chunk_size 1920,1920,1 
+```
 
 This pipeline is [nf-core](https://nf-co.re/) compatible and reuses pipeline infrastructure from the nf-core projec, including the ability to use nf-core institutional profiles. 
 
