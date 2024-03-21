@@ -55,7 +55,7 @@ log.info logo + paramsSummaryLog(workflow) + citation
 */
 
 include { BIOFORMATS2RAW              } from './modules/janelia/bioformats2raw/main'
-include { NGFFBROWSEIMPORTER          } from './modules/janelia/ngffbrowseimporter/main'
+include { NGFFBROWSEIMPORTER          } from './modules/local/ngffbrowseimporter/main'
 include { CUSTOM_DUMPSOFTWAREVERSIONS } from './modules/nf-core/custom/dumpsoftwareversions/main'
 
 workflow TO_OMEZARR {
