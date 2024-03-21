@@ -46,6 +46,7 @@
                 "compression": {
                     "type": "string",
                     "description": "How the blocks will be compressed. Default: blosc",
+                    "help": "Blosc (LZ4) compresses faster, Zlib compresses more.",
                     "fa_icon": "fas fa-file-archive",
                     "enum": ["zlib", "blosc"]
                 },
