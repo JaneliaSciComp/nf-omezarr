@@ -23,7 +23,7 @@
                 "type": "string",
                 "errorMessage": "Input image file must be provided for every row in the samplesheet"
             },
-            "mip_xy": {
+            "projection_xy": {
                 "type": "string"
             }
         },
