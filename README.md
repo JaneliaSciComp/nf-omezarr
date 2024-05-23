@@ -1,6 +1,6 @@
 # OME-Zarr Conversion Pipeline
 
-Nextflow pipeline which converts Bioformats-compatible images to [NGFF](https://github.com/ome/ngff) (e.g. OME-Zarr) format using [bioformats2raw](https://github.com/glencoesoftware/bioformats2raw). Also generates metadata for [ngffbrowse](https://github.com/JaneliaSciComp/ngffbrowse).
+Nextflow pipeline which converts Bioformats-compatible images to [NGFF](https://github.com/ome/ngff) (e.g. OME-Zarr) format using [bioformats2raw](https://github.com/glencoesoftware/bioformats2raw). Also generates metadata for [zarrcade](https://github.com/JaneliaSciComp/zarrcade).
 
 ## Quick Start
 
@@ -29,7 +29,7 @@ image2,/path/to/image2.czi,subpath,/path/to/image2_mip.png
 image2,/path/to/image3.czi,subpath,/path/to/image3_mip.png
 ```
 
-Each row represents one input image in any Bioformats-compatible format (Zeiss CZI in the example above). The `output_path` is relative to the `--outdir` parameter and can be left empty. The `projection_xy` is likewise optional and should point to a MIP or thumbnail of the image. If provided, it will be included in the output Zarr container, and used for display in [ngffbrowse](https://github.com/JaneliaSciComp/ngffbrowse).
+Each row represents one input image in any Bioformats-compatible format (Zeiss CZI in the example above). The `output_path` is relative to the `--outdir` parameter and can be left empty. The `projection_xy` is likewise optional and should point to a MIP or thumbnail of the image. If provided, it will be included in the output Zarr container, and used for display in [zarrcade](https://github.com/JaneliaSciComp/zarrcade).
 
 The following command will analyze one input image in N5 format and save a CSV of detected spots to the `./output` directory. 
 

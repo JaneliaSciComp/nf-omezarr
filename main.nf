@@ -55,7 +55,7 @@ log.info logo + paramsSummaryLog(workflow) + citation
 */
 
 include { BIOFORMATS2RAW              } from './modules/janelia/bioformats2raw/main'
-include { NGFFBROWSEIMPORTER          } from './modules/local/ngffbrowseimporter/main'
+include { ZARRCADEIMPORTER          } from './modules/local/zarrcadeimporter/main'
 include { CUSTOM_DUMPSOFTWAREVERSIONS } from './modules/nf-core/custom/dumpsoftwareversions/main'
 
 workflow TO_OMEZARR {
@@ -105,8 +105,8 @@ workflow TO_OMEZARR {
     .filter { it[2] != null }
 
     // Assign projections to zarrs
-    NGFFBROWSEIMPORTER(zarrs)
-    ch_versions = ch_versions.mix(NGFFBROWSEIMPORTER.out.versions)
+    ZARRCADEIMPORTER(zarrs)
+    ch_versions = ch_versions.mix(ZARRCADEIMPORTER.out.versions)
 
     //
     // MODULE: Pipeline reporting

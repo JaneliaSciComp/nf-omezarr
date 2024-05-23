@@ -1,6 +1,6 @@
-process NGFFBROWSEIMPORTER {
+process ZARRCADEIMPORTER {
     tag "${meta.id}"
-    container "ghcr.io/janeliascicomp/ngffbrowse-importer:0.0.1"
+    container "ghcr.io/janeliascicomp/zarrcade-importer:0.0.1"
     
     input:
     tuple val(meta),
@@ -26,7 +26,7 @@ process NGFFBROWSEIMPORTER {
     
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
-        ngffbrowse_importer: \$(cat /app/VERSION)
+        zarrcade_importer: \$(cat /app/VERSION)
     END_VERSIONS
     """
 }
