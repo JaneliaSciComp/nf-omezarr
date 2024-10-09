@@ -2,9 +2,11 @@
 
 Nextflow pipeline which converts Bioformats-compatible images to [NGFF](https://github.com/ome/ngff) (e.g. OME-Zarr) format using [bioformats2raw](https://github.com/glencoesoftware/bioformats2raw). Also generates metadata for [zarrcade](https://github.com/JaneliaSciComp/zarrcade).
 
+Why not just use bioformats2raw directly? This pipeline encapsulates all the dependencies, so you don't need to install Java, blosc, etc. It also lets you distribute work on any HPC cluster.
+
 ## Quick Start
 
-The only software requirements for running this pipeline are [Nextflow](https://www.nextflow.io) (version 20.10.0 or greater) and either Docker or [Singularity](https://sylabs.io) (version 3.5 or greater). If you are running in an HPC cluster, ask your system administrator to install Singularity on all the cluster nodes.
+The only software requirements for running this pipeline are [Nextflow](https://www.nextflow.io) (version 20.10.0 or greater) and either [Docker](https://docs.docker.com/get-started/get-docker/) or [Singularity](https://sylabs.io) (version 3.5 or greater). If you are running on an HPC cluster, ask your system administrator to install Singularity on all the cluster nodes.
 
 To [install Nextflow](https://www.nextflow.io/docs/latest/getstarted.html):
 
@@ -31,7 +33,7 @@ image3,/path/to/set2/image1.czi,set2
 
 Each row represents one input image in any [Bioformats-compatible format](https://docs.openmicroscopy.org/bio-formats/5.8.2/supported-formats.html) (Zeiss CZI in the example above). The `output_path` is a folder relative to the `--outdir` parameter and can be left empty to place output Zarrs directly in the `output_path`. 
 
-The following command will analyze one input image in N5 format and save a CSV of detected spots to the `./output` directory. 
+The following command will convert the images listed in `samplesheet.csv` to OME-Zarrs in the `./output` directory, using 40 cores for each conversion process, and zlib compression. 
 
 ```bash
     nextflow run JaneliaSciComp/nf-omezarr -profile singularity \
@@ -45,7 +47,13 @@ By default, the Zarr chunk size is set to 128,128,128. You can customize the chu
         --input samplesheet.csv --outdir ./output --chunk_size 1920,1920,1 
 ```
 
-This pipeline is [nf-core](https://nf-co.re/) compatible and reuses pipeline infrastructure from the nf-core projec, including the ability to use nf-core institutional profiles. 
+This pipeline is [nf-core](https://nf-co.re/)-compatible and reuses pipeline infrastructure from the nf-core project, including the ability to use [nf-core institutional profiles](https://nf-co.re/configs/) that let you run on many university clusters without additional configuration. For example, to run this pipeline on the Janelia cluster: 
+
+```bash
+    nextflow run JaneliaSciComp/nf-omezarr -profile janelia \
+         --input samplesheet.csv --outdir ./output
+```
+
 
 ## Pipeline options
 
@@ -57,7 +65,7 @@ Define the input data and bioformats2raw parameters.
 | `outdir` | The output directory where the results will be saved. You have to use absolute paths to storage on Cloud infrastructure. | `string` |  | True |  |
 | `bioformats2raw_opts` | Extra options for Bioformats2raw | `string` |  |  |  |
 | `chunk_size` | Chunk size for Zarr in X,Y,Z order. Default: 128,128,128 | `string` |  |  |  |
-| `compression` | How the blocks will be compressed. Default: blosc | `string` |  |  |  |
+| `compression` | How the blocks will be compressed. The default "blosc" compression uses LZ4. The "zlib" compression is slower but usually achieves a higher compression ratio. More information is available in the [https://jzarr.readthedocs.io/en/latest/tutorial.html#compressors](JZarr documentation). Default: blosc | `string` |  |  |  |
 | `cpus` | Number of cores to allocate for bioformats2raw. Default: 10 | `integer` |  |  |  |
 | `memory` | Amount of memory to allocate for bioformats2raw. Default: 36.G | `string` |  |  |  |
 
