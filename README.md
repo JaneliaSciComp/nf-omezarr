@@ -1,6 +1,6 @@
 # OME-Zarr Conversion Pipeline
 
-Nextflow pipeline which converts Bioformats-compatible images to [NGFF](https://github.com/ome/ngff) (e.g. OME-Zarr) format using [bioformats2raw](https://github.com/glencoesoftware/bioformats2raw). Also generates metadata for [zarrcade](https://github.com/JaneliaSciComp/zarrcade).
+Nextflow pipeline which converts Bioformats-compatible images to [NGFF](https://github.com/ome/ngff) (e.g. OME-Zarr) format using [bioformats2raw](https://github.com/glencoesoftware/bioformats2raw). 
 
 Why not just use bioformats2raw directly? This pipeline encapsulates all the dependencies, so you don't need to install Java, blosc, etc. It also lets you distribute work on any HPC cluster.
 
