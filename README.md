@@ -23,13 +23,13 @@ Now you can run the pipeline and it will download everything else it needs. Firs
 samplesheet.csv:
 
 ```csv
-id,image,output_path,projection_xy
-image1,/path/to/image1.czi,subpath,/path/to/image1_mip.png
-image2,/path/to/image2.czi,subpath,/path/to/image2_mip.png
-image2,/path/to/image3.czi,subpath,/path/to/image3_mip.png
+id,image,output_path
+image1,/path/to/set1/image1.czi,set1
+image2,/path/to/set1/image2.czi,set1
+image3,/path/to/set2/image1.czi,set2
 ```
 
-Each row represents one input image in any Bioformats-compatible format (Zeiss CZI in the example above). The `output_path` is relative to the `--outdir` parameter and can be left empty. The `projection_xy` is likewise optional and should point to a MIP or thumbnail of the image. If provided, it will be included in the output Zarr container, and used for display in [zarrcade](https://github.com/JaneliaSciComp/zarrcade).
+Each row represents one input image in any [Bioformats-compatible format](https://docs.openmicroscopy.org/bio-formats/5.8.2/supported-formats.html) (Zeiss CZI in the example above). The `output_path` is a folder relative to the `--outdir` parameter and can be left empty to place output Zarrs directly in the `output_path`. 
 
 The following command will analyze one input image in N5 format and save a CSV of detected spots to the `./output` directory. 
 
