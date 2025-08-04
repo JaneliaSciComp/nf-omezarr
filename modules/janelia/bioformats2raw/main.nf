@@ -27,7 +27,7 @@ process BIOFORMATS2RAW {
         --max_workers=$task.cpus \
         $extra_args \
         $input_image \
-        $zarr_output_path
+        "$zarr_output_path"
         
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
