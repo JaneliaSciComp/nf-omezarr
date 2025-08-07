@@ -7,7 +7,7 @@
         "janelia": {
           "bioformats2raw": {
             "branch": "main",
-            "git_sha": "8389d4a4c9c55cc93d3be7808f55bfd93df8c563",
+            "git_sha": "61f810f355d3571c945eea6381130d0d2e0afeb7",
             "installed_by": ["modules"]
           }
         }
@@ -18,7 +18,7 @@
         "nf-core": {
           "custom/dumpsoftwareversions": {
             "branch": "master",
-            "git_sha": "8ec825f465b9c17f9d83000022995b4f7de6fe93",
+            "git_sha": "41dfa3f7c0ffabb96a6a813fe321c6d1cc5b6e46",
             "installed_by": ["modules"]
           }
         }
