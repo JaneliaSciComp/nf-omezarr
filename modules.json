@@ -2,7 +2,7 @@
   "name": "JaneliaSciComp/nf-omezarr",
   "homePage": "https://github.com/JaneliaSciComp/nf-omezarr",
   "repos": {
-    "JaneliaSciComp/nextflow-modules": {
+    "https://github.com/JaneliaSciComp/nextflow-modules.git": {
       "modules": {
         "janelia": {
           "bioformats2raw": {
