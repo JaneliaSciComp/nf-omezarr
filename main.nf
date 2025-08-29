@@ -21,7 +21,7 @@ include { paramsHelp; validateParameters; } from 'plugin/nf-validation'
 if (params.help) {
     def logo = NfcoreTemplate.logo(workflow, params.monochrome_logs)
     def citation = '\n' + WorkflowMain.citation(workflow) + '\n'
-    def String command = "nextflow run ${workflow.manifest.name} --input samplesheet.csv --outdir ./output -profile singularity"
+    def String command = "nextflow run ${workflow.manifest.name} --input /path/to/images --outdir ./output -profile singularity"
     log.info logo + paramsHelp(command) + citation + NfcoreTemplate.dashedLine(params.monochrome_logs)
     System.exit(0)
 }
@@ -39,7 +39,7 @@ def final_params = WorkflowMain.initialise(workflow, params, log)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
 
-include { paramsSummaryLog; paramsSummaryMap; fromSamplesheet } from 'plugin/nf-validation'
+include { paramsSummaryLog; paramsSummaryMap } from 'plugin/nf-validation'
 
 def logo = NfcoreTemplate.logo(workflow, params.monochrome_logs)
 def citation = '\n' + WorkflowMain.citation(workflow) + '\n'
@@ -60,24 +60,73 @@ include { CUSTOM_DUMPSOFTWAREVERSIONS } from './modules/nf-core/custom/dumpsoftw
 workflow TO_OMEZARR {
     ch_versions = Channel.empty()
 
-    Channel
-        .fromSamplesheet("input")
-        .map {
-            def (meta, image, output_path) = it
+    // Define supported image file extensions (based on Bio-Formats)
+    def supportedExtensions = [
+        'tif', 'tiff', 'czi', 'lsm', 'nd2', 'oib', 'oif', 'lif', 'ims', 'vsi', 'scn', 'svs', 'ndpi',
+        'dv', 'r3d', 'stk', 'pic', 'ome.tiff', 'ome.tif', 'lei', 'flex', 'mea', 'res', 'sld', 'aim',
+        'al3d', 'gel', 'am', 'amiramesh', 'grey', 'hx', 'labels', 'cif', 'img', 'hdr', 'sif', 'png',
+        'afi', 'htd', 'pnl', 'avi', 'arf', 'exp', 'spc', 'sdt', 'xml', 'h5', '1sc', 'raw', 'dcm',
+        'dicom', 'v', 'eps', 'epsi', 'ps', 'fits', 'dm3', 'dm4', 'dm2', 'gif', 'naf', 'his', 'vms',
+        'txt', 'bmp', 'jpg', 'i2i', 'ics', 'ids', 'fff', 'seq', 'ipw', 'hed', 'mod', 'liff', 'obf',
+        'msr', 'xdce', 'frm', 'inr', 'ipl', 'ipm', 'dat', 'par', 'jp2', 'jpk', 'jpx', 'klb', 'xv',
+        'bip', 'fli', 'l2d', 'lim', 'htd', 'mvd2', 'acff', 'wat', 'wlz', 'lms', 'zvi', 'mdb', 'mrxs',
+        'mcd', 'sxm', 'tfr', 'ffr', 'zfr', 'zfp', '2fl', 'pr3', 'fdf', 'hdf', 'bif', 'dti', 'xys',
+        'html', 'wat', 'pcx', 'pds', 'im3', 'pbm', 'pgm', 'ppm', 'psd', 'bin', 'pict', 'cfg', 'spe',
+        'afm', 'mov', 'rcpnl', 'sm2', 'sm3', 'xqd', 'xqf', 'cxd', 'db', 'tga', 'vws', 'top', 'pcoraw',
+        'rec', 'crw', 'cr2', 'ch5', 'c01', 'dib', 'nef', 'nii', 'nii.gz', 'nrrd', 'nhdr', 'omp2info',
+        'apl', 'mtb', 'tnb', 'obsep', 'oir', 'pct', 'qptiff', 'tf2', 'tf8', 'btf', 'ome', 'sldy',
+        'mrw', 'mng', 'stp', 'mrc', 'st', 'ali', 'map', 'mrcs', 'mnc', 'jdce'
+    ]
 
-            def abs_output_path = params.outdir
-            if (output_path && !output_path.isEmpty()) {
-                abs_output_path = output_path
-                if (!abs_output_path.startsWith('/')) {
-                    abs_output_path = new File(params.outdir, output_path).getAbsolutePath()
+    // Create a channel for image files
+    Channel
+        .fromPath(params.input)
+        .map { inputPath ->
+            def inputFile = new File(inputPath.toString())
+            
+            if (inputFile.isDirectory()) {
+                // If input is a directory, find all image files
+                def imageFiles = []
+                inputFile.eachFileRecurse { file ->
+                    if (file.isFile()) {
+                        def extension = file.name.toLowerCase().split('\\.').last()
+                        // Handle multi-part extensions like .ome.tiff
+                        if (file.name.toLowerCase().contains('.ome.')) {
+                            def parts = file.name.toLowerCase().split('\\.')
+                            if (parts.size() >= 3) {
+                                extension = "${parts[-2]}.${parts[-1]}"
+                            }
+                        }
+                        if (supportedExtensions.contains(extension)) {
+                            imageFiles.add(file.getAbsolutePath())
+                        }
+                    }
                 }
-                abs_output_f = new File(abs_output_path)
-                if (!abs_output_f.exists()) {
-                    abs_output_f.mkdirs()
+                return imageFiles
+            } else {
+                // If input is a single file, check if it's a supported format
+                def extension = inputFile.name.toLowerCase().split('\\.').last()
+                if (inputFile.name.toLowerCase().contains('.ome.')) {
+                    def parts = inputFile.name.toLowerCase().split('\\.')
+                    if (parts.size() >= 3) {
+                        extension = "${parts[-2]}.${parts[-1]}"
+                    }
+                }
+                if (supportedExtensions.contains(extension)) {
+                    return [inputFile.getAbsolutePath()]
+                } else {
+                    log.error "Unsupported file format: ${inputFile.name}"
+                    return []
                 }
             }
-
-            [meta, image, abs_output_path]
+        }
+        .flatten()
+        .map { imagePath ->
+            def imageFile = new File(imagePath)
+            def meta = [
+                id: imageFile.name.replaceAll(/\.[^.]+$/, '') // Remove file extension for ID
+            ]
+            [meta, imageFile.getAbsolutePath(), params.outdir]
         }
         .set { ch_input }
 

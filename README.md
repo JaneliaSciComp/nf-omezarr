@@ -20,38 +20,34 @@ To [install Singularity](https://sylabs.io/guides/3.7/admin-guide/installation.h
 
     sudo yum install singularity
 
-Now you can run the pipeline and it will download everything else it needs. First, prepare a samplesheet with your input data that looks as follows:
+Now you can run the pipeline and it will download everything else it needs. Simply provide either a single image file or a directory containing image files.
 
-samplesheet.csv:
-
-```csv
-id,image,output_path
-image1,/path/to/set1/image1.czi,set1
-image2,/path/to/set1/image2.czi,set1
-image3,/path/to/set2/image1.czi,set2
-```
-
-Each row represents one input image in any [Bioformats-compatible format](https://docs.openmicroscopy.org/bio-formats/5.8.2/supported-formats.html) (Zeiss CZI in the example above). The `output_path` is a folder relative to the `--outdir` parameter and can be left empty to place output Zarrs directly in the `output_path`. 
-
-The following command will convert the images listed in `samplesheet.csv` to OME-Zarrs in the `./output` directory, using 40 cores for each conversion process, and zlib compression. 
-
+**For a single image file:**
 ```bash
     nextflow run JaneliaSciComp/nf-omezarr -profile singularity \
-        --input samplesheet.csv --outdir ./output --compression zlib --cpus 40
+        --input /path/to/image.czi --outdir ./output --compression zlib --cpus 40
 ```
+
+**For a directory containing multiple images:**
+```bash
+    nextflow run JaneliaSciComp/nf-omezarr -profile singularity \
+        --input /path/to/images/ --outdir ./output --compression zlib --cpus 40
+```
+
+The pipeline automatically detects all [Bioformats-compatible image files](https://docs.openmicroscopy.org/bio-formats/5.8.2/supported-formats.html) in the specified directory and processes each one. Supported formats include CZI, TIFF, LSM, ND2, LIF, IMS, VSI, and many others.
 
 By default, the Zarr chunk size is set to 128,128,128. You can customize the chunk size of the zarr using the `--chunk_size` parameter, e.g.
 
 ```bash
     nextflow run JaneliaSciComp/nf-omezarr -profile singularity \
-        --input samplesheet.csv --outdir ./output --chunk_size 1920,1920,1 
+        --input /path/to/images/ --outdir ./output --chunk_size 1920,1920,1 
 ```
 
 This pipeline is [nf-core](https://nf-co.re/)-compatible and reuses pipeline infrastructure from the nf-core project, including the ability to use [nf-core institutional profiles](https://nf-co.re/configs/) that let you run on many university clusters without additional configuration. For example, to run this pipeline on the Janelia cluster: 
 
 ```bash
     nextflow run JaneliaSciComp/nf-omezarr -profile janelia \
-         --input samplesheet.csv --outdir ./output
+         --input /path/to/images/ --outdir ./output
 ```
 
 
@@ -61,7 +57,7 @@ Define the input data and bioformats2raw parameters.
 
 | Parameter | Description | Type | Default | Required | Hidden |
 |-----------|-----------|-----------|-----------|-----------|-----------|
-| `input` | Path to comma-separated file containing information about the samples in the experiment. <details><summary>Help</summary><small>You will need to create a design file with information about the samples in your experiment before running the pipeline. Use this parameter to specify its location. It has to be a comma-separated file with 4 columns, and a header row. See [usage docs](https://nf-co.re/rnaseq/usage#samplesheet-input).</small></details>| `string` |  | True |  |
+| `input` | Path to input image file or directory containing image files to convert. <details><summary>Help</summary><small>Provide either a single image file in any Bioformats-compatible format, or a directory containing multiple image files. If a directory is provided, all supported image files within it will be processed.</small></details>| `string` |  | True |  |
 | `outdir` | The output directory where the results will be saved. You have to use absolute paths to storage on Cloud infrastructure. | `string` |  | True |  |
 | `bioformats2raw_opts` | Extra options for Bioformats2raw | `string` |  |  |  |
 | `chunk_size` | Chunk size for Zarr in X,Y,Z order. Default: 128,128,128 | `string` |  |  |  |
