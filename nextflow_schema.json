@@ -29,12 +29,6 @@
                     "description": "The output directory where the results will be saved. You have to use absolute paths to storage on Cloud infrastructure.",
                     "fa_icon": "fas fa-folder-open"
                 },
-                "bioformats2raw_opts": {
-                    "type": "string",
-                    "description": "Extra options for Bioformats2raw",
-                    "help": "Options can be found here: https://github.com/glencoesoftware/bioformats2raw/blob/master/src/main/java/com/glencoesoftware/bioformats2raw/Converter.java",
-                    "fa_icon": "fas fa-terminal"
-                },
                 "chunk_size": {
                     "type": "string",
                     "description": "Chunk size for Zarr in X,Y,Z order. Default: 128,128,128",
@@ -45,7 +39,28 @@
                     "description": "How the blocks will be compressed. Default: blosc",
                     "help": "Blosc (LZ4) compresses faster, Zlib compresses more.",
                     "fa_icon": "fas fa-file-archive",
-                    "enum": ["zlib", "blosc"]
+                    "enum": [
+                        "zlib",
+                        "blosc"
+                    ]
+                },
+                "compression_properties": {
+                    "type": "string",
+                    "description": "Compression properties for the blocks. Default: empty",
+                    "help": "Compression properties for the blocks.",
+                    "fa_icon": "fas fa-align-justify"
+                },
+                "overwrite": {
+                    "type": "boolean",
+                    "description": "Overwrite images in the output directory if they exists. Default: false",
+                    "help": "Enables the --overwrite option for bioformats2raw.",
+                    "fa_icon": "fas fa-edit"
+                },
+                "bioformats2raw_opts": {
+                    "type": "string",
+                    "description": "Extra options for Bioformats2raw",
+                    "help": "Options can be found here: https://github.com/glencoesoftware/bioformats2raw/blob/master/src/main/java/com/glencoesoftware/bioformats2raw/Converter.java",
+                    "fa_icon": "fas fa-terminal"
                 },
                 "cpus": {
                     "type": "integer",
