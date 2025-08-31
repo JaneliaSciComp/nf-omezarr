@@ -29,6 +29,13 @@
                     "description": "The output directory where the results will be saved. You have to use absolute paths to storage on Cloud infrastructure.",
                     "fa_icon": "fas fa-folder-open"
                 },
+                "memo_dir": {
+                    "type": "string",
+                    "format": "directory-path",
+                    "description": "The directory where the temporary memo files will be saved. Default: outdir/tmp",
+                    "fa_icon": "fas fa-folder-open",
+                    "hidden": true
+                },
                 "chunk_size": {
                     "type": "string",
                     "description": "Chunk size for Zarr in X,Y,Z order. Default: 128,128,128",

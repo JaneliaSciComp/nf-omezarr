@@ -126,14 +126,17 @@ workflow TO_OMEZARR {
             def meta = [
                 id: imageFile.name.replaceAll(/\.[^.]+$/, '') // Remove file extension for ID
             ]
-            [meta, imageFile.getAbsolutePath(), params.outdir]
+            def memo_path = params.memo_dir ? params.memo_dir : params.outdir
+            // Create memo directory if it doesn't exist
+            new File(memo_path).mkdirs()
+            [meta, imageFile.getAbsolutePath(), params.outdir, memo_path]
         }
         .set { ch_input }
 
     // Convert to OME-Zarr
     BIOFORMATS2RAW(ch_input.map {
-        def (meta, image, abs_output_path) = it
-        [meta, image, abs_output_path]
+        def (meta, image, abs_output_path, memo_path) = it
+        [meta, image, abs_output_path, memo_path]
     })
     ch_versions = ch_versions.mix(BIOFORMATS2RAW.out.versions)
 
