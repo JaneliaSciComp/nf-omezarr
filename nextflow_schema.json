@@ -37,7 +37,8 @@
                 "compression": {
                     "type": "string",
                     "description": "How the blocks will be compressed. Default: blosc",
-                    "help": "Blosc (LZ4) compresses faster, Zlib compresses more.",
+                    "default": "blosc",
+                    "help": "When changing the compression, you also need to change the compression properties. See the bioformats2raw documentation for more details.",
                     "fa_icon": "fas fa-file-archive",
                     "enum": [
                         "zlib",
@@ -46,8 +47,9 @@
                 },
                 "compression_properties": {
                     "type": "string",
-                    "description": "Compression properties for the blocks. Default: empty",
-                    "help": "Compression properties for the blocks.",
+                    "description": "Comma-delimited compression properties for the blocks. Default: cname=lz4,clevel=6",
+                    "default": "cname=lz4,clevel=6",
+                    "help": "Compression properties for the blocks, formatted as 'key=value,key=value,...'. See the bioformats2raw documentation for more details.",
                     "fa_icon": "fas fa-align-justify"
                 },
                 "overwrite": {
