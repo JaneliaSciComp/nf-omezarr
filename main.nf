@@ -55,6 +55,7 @@ log.info logo + paramsSummaryLog(workflow) + citation
 */
 
 include { BIOFORMATS2RAW              } from './modules/janelia/bioformats2raw/main'
+include { UNWRAP_SINGLE_IMAGE }         from './modules/local/unwrap/main'
 include { CUSTOM_DUMPSOFTWAREVERSIONS } from './modules/nf-core/custom/dumpsoftwareversions/main'
 
 workflow TO_OMEZARR {
@@ -112,6 +113,8 @@ workflow TO_OMEZARR {
                         extension = "${parts[-2]}.${parts[-1]}"
                     }
                 }
+                // Convert from org.codehaus.groovy.runtime.GStringImpl to String, so that comparisons work
+                extension = extension.toString()
                 if (supportedExtensions.contains(extension)) {
                     return [inputFile.getAbsolutePath()]
                 } else {
@@ -126,17 +129,25 @@ workflow TO_OMEZARR {
             def meta = [
                 id: imageFile.name.replaceAll(/\.[^.]+$/, '') // Remove file extension for ID
             ]
-            [meta, imageFile.getAbsolutePath(), params.outdir]
+            def memo_path = params.memo_dir ? params.memo_dir : params.outdir
+            // Create memo directory if it doesn't exist
+            new File(memo_path).mkdirs()
+            [meta, imageFile.getAbsolutePath(), params.outdir, memo_path]
         }
         .set { ch_input }
 
     // Convert to OME-Zarr
     BIOFORMATS2RAW(ch_input.map {
-        def (meta, image, abs_output_path) = it
-        [meta, image, abs_output_path]
+        def (meta, image, abs_output_path, memo_path) = it
+        [meta, image, abs_output_path, memo_path]
     })
-    ch_versions = ch_versions.mix(BIOFORMATS2RAW.out.versions)
 
+    // Unwrap single-image outputs if requested
+    if (params.unwrap) {
+        UNWRAP_SINGLE_IMAGE(BIOFORMATS2RAW.out.params)
+    }
+
+    ch_versions = ch_versions.mix(BIOFORMATS2RAW.out.versions)
     //
     // MODULE: Pipeline reporting
     //

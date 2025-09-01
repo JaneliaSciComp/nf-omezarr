@@ -11,15 +11,16 @@ input:
   - ch_meta:
       type: tuple
       description: |
-        Channel of tuples containing a meta map, the input image, and an 
-        output path where the OME-Zarr should be created.
-        Structure: [ val(meta), path(input_image), val(output_path) ]
+        Channel of tuples containing a meta map, the input image, an 
+        output path where the OME-Zarr should be created, and a memo directory
+        where temporary files will be saved.
+        Structure: [ val(meta), path(input_image), val(output_path), val(memo_directory) ]
 
 output:
   - params:
       type: tuple
       description: |
-        Same as the input tuple but replaces output path with the OME-Zarr that 
+        Same as the input tuple but replaces output paths with the OME-Zarr that 
         was created.
         Structure: [ val(meta), path(input_image), val(zarr_output_path) ]
   - versions:

@@ -26,14 +26,22 @@
                 "outdir": {
                     "type": "string",
                     "format": "directory-path",
-                    "description": "The output directory where the results will be saved. You have to use absolute paths to storage on Cloud infrastructure.",
+                    "description": "The output directory where the results will be saved.",
+                    "help_text": "An output zarr directory will be created in this directory for each input image file. You have to use an absolute path to storage on Cloud infrastructure.",
                     "fa_icon": "fas fa-folder-open"
                 },
-                "bioformats2raw_opts": {
+                "memo_dir": {
                     "type": "string",
-                    "description": "Extra options for Bioformats2raw",
-                    "help": "Options can be found here: https://github.com/glencoesoftware/bioformats2raw/blob/master/src/main/java/com/glencoesoftware/bioformats2raw/Converter.java",
-                    "fa_icon": "fas fa-terminal"
+                    "format": "directory-path",
+                    "description": "The directory where the temporary memo files will be saved. Default: outdir/tmp",
+                    "fa_icon": "fas fa-folder-open",
+                    "hidden": true
+                },
+                "overwrite": {
+                    "type": "boolean",
+                    "description": "Overwrite images in the output directory if they exists. Default: false",
+                    "help": "Enables the --overwrite option for bioformats2raw.",
+                    "fa_icon": "fas fa-edit"
                 },
                 "chunk_size": {
                     "type": "string",
@@ -43,9 +51,33 @@
                 "compression": {
                     "type": "string",
                     "description": "How the blocks will be compressed. Default: blosc",
-                    "help": "Blosc (LZ4) compresses faster, Zlib compresses more.",
+                    "default": "blosc",
+                    "help": "When changing the compression, you also need to change the compression properties. See the bioformats2raw documentation for more details.",
                     "fa_icon": "fas fa-file-archive",
-                    "enum": ["zlib", "blosc"]
+                    "enum": [
+                        "zlib",
+                        "blosc"
+                    ]
+                },
+                "compression_properties": {
+                    "type": "string",
+                    "description": "Comma-delimited compression properties for the blocks. Default: cname=lz4,clevel=6",
+                    "default": "cname=lz4,clevel=6",
+                    "help": "Compression properties for the blocks, formatted as 'key=value,key=value,...'. See the bioformats2raw documentation for more details.",
+                    "fa_icon": "fas fa-align-justify"
+                },
+                "bioformats2raw_opts": {
+                    "type": "string",
+                    "description": "Extra options for Bioformats2raw",
+                    "help": "Options can be found here: https://github.com/glencoesoftware/bioformats2raw/blob/master/src/main/java/com/glencoesoftware/bioformats2raw/Converter.java",
+                    "fa_icon": "fas fa-terminal"
+                },
+                "unwrap": {
+                    "type": "boolean",
+                    "description": "Unwrap single-image outputs by moving contents of '0' directory up one level. Default: true",
+                    "help": "When enabled, if the output contains only a '0' directory and no '1' directory, the contents of the '0' directory will be moved up one level and the '0' directory will be removed.",
+                    "fa_icon": "fas fa-layer-group",
+                    "default": true
                 },
                 "cpus": {
                     "type": "integer",
