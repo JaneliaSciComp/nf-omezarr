@@ -9,7 +9,7 @@ While you can absolutely run bioformats2raw on its own or use the excellent [NGF
 * **HPC Integration**: Easily schedules and distributes work on high-performance computing (HPC) clusters.
 * **Dependency Encapsulation**: No need to install or manage Java, Blosc, or other libraries. Everything runs in a controlled, containerized environment.
 * **Batch Processing**: Automatically scans and processes entire directories of images.
-* **Extended Features**: Includes Janelia-specific enhancements that may also benefit other users and facilities.
+* **Extended Features**: Includes Janelia-specific enhancements that may also benefit other users and facilities. For example, single output images can be unwrapped from the transitional "bioformats2raw.layout" format, making the images easier to work with. 
 
 ## Quick Start
 
