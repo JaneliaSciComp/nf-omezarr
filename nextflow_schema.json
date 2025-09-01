@@ -37,6 +37,12 @@
                     "fa_icon": "fas fa-folder-open",
                     "hidden": true
                 },
+                "overwrite": {
+                    "type": "boolean",
+                    "description": "Overwrite images in the output directory if they exists. Default: false",
+                    "help": "Enables the --overwrite option for bioformats2raw.",
+                    "fa_icon": "fas fa-edit"
+                },
                 "chunk_size": {
                     "type": "string",
                     "description": "Chunk size for Zarr in X,Y,Z order. Default: 128,128,128",
@@ -59,12 +65,6 @@
                     "default": "cname=lz4,clevel=6",
                     "help": "Compression properties for the blocks, formatted as 'key=value,key=value,...'. See the bioformats2raw documentation for more details.",
                     "fa_icon": "fas fa-align-justify"
-                },
-                "overwrite": {
-                    "type": "boolean",
-                    "description": "Overwrite images in the output directory if they exists. Default: false",
-                    "help": "Enables the --overwrite option for bioformats2raw.",
-                    "fa_icon": "fas fa-edit"
                 },
                 "bioformats2raw_opts": {
                     "type": "string",
