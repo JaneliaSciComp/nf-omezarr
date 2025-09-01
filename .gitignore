@@ -2,3 +2,5 @@ work
 .nextflow*
 output
 .DS_Store
+CLAUDE.md
+.claude
