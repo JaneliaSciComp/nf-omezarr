@@ -7,7 +7,7 @@
         "janelia": {
           "bioformats2raw": {
             "branch": "main",
-            "git_sha": "e0c672edffb31b7ee4114e5763c3f41a04bfbb9b",
+            "git_sha": "93b30afcfab9d8c3cb170f318d9d2c78c1e9e2bf",
             "installed_by": ["modules"]
           }
         }
