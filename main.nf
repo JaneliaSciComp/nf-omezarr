@@ -57,6 +57,8 @@ log.info logo + paramsSummaryLog(workflow) + citation
 include { BIOFORMATS2RAW              } from './modules/janelia/bioformats2raw/main'
 include { CUSTOM_DUMPSOFTWAREVERSIONS } from './modules/nf-core/custom/dumpsoftwareversions/main'
 
+
+
 workflow TO_OMEZARR {
     ch_versions = Channel.empty()
 
@@ -112,6 +114,8 @@ workflow TO_OMEZARR {
                         extension = "${parts[-2]}.${parts[-1]}"
                     }
                 }
+                // Convert from org.codehaus.groovy.runtime.GStringImpl to String, so that comparisons work
+                extension = extension.toString()
                 if (supportedExtensions.contains(extension)) {
                     return [inputFile.getAbsolutePath()]
                 } else {
