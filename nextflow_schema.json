@@ -74,9 +74,10 @@
                 },
                 "unwrap": {
                     "type": "boolean",
-                    "description": "Unwrap single-image outputs by moving contents of '0' directory up one level. Default: false",
+                    "description": "Unwrap single-image outputs by moving contents of '0' directory up one level. Default: true",
                     "help": "When enabled, if the output contains only a '0' directory and no '1' directory, the contents of the '0' directory will be moved up one level and the '0' directory will be removed.",
-                    "fa_icon": "fas fa-layer-group"
+                    "fa_icon": "fas fa-layer-group",
+                    "default": true
                 },
                 "cpus": {
                     "type": "integer",
