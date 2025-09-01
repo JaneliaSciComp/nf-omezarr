@@ -1,12 +1,19 @@
 # OME-Zarr Conversion Pipeline
 
-Nextflow pipeline which converts Bioformats-compatible images to [NGFF](https://github.com/ome/ngff) (e.g. OME-Zarr) format using [bioformats2raw](https://github.com/glencoesoftware/bioformats2raw). 
+This Nextflow pipeline automates the conversion of [Bio-Formats-compatible images](https://bio-formats.readthedocs.io/en/v8.3.0/supported-formats.html) into the [Next Generation File Format (NGFF)](https://github.com/ome/ngff) (a.k.a. OME-Zarr) using [bioformats2raw](https://github.com/glencoesoftware/bioformats2raw). 
 
-Why not just use bioformats2raw directly? This pipeline encapsulates all the dependencies, so you don't need to install Java, blosc, etc. It also lets you distribute work on any HPC cluster.
+## Why use this pipeline instead of bioformats2raw directly?
+
+While you can absolutely run bioformats2raw on its own or use the excellent [NGFF-Converter](https://github.com/glencoesoftware/NGFF-Converter) GUI, this pipeline has advantages in certain situtations:
+
+* **HPC Integration**: Easily schedules and distributes work on high-performance computing (HPC) clusters.
+* **Dependency Encapsulation**: No need to install or manage Java, Blosc, or other libraries. Everything runs in a controlled, containerized environment.
+* **Batch Processing**: Automatically scans and processes entire directories of images.
+* **Extended Features**: Includes Janelia-specific enhancements that may also benefit other users and facilities.
 
 ## Quick Start
 
-The only software requirements for running this pipeline are [Nextflow](https://www.nextflow.io) (version 20.10.0 or greater) and either [Docker](https://docs.docker.com/get-started/get-docker/) or [Singularity](https://sylabs.io) (version 3.5 or greater). If you are running on an HPC cluster, ask your system administrator to install Singularity on all the cluster nodes.
+The only software requirements for running this pipeline are [Nextflow](https://www.nextflow.io) (version 23.04.0 or greater) and either [Docker](https://docs.docker.com/get-started/get-docker/) or [Singularity/Apptainer](https://apptainer.org/). If you are running on an HPC cluster, ask your system administrator to install Apptainer on all the cluster nodes.
 
 To [install Nextflow](https://www.nextflow.io/docs/latest/getstarted.html):
 
@@ -16,22 +23,20 @@ Alternatively, you can install it as a conda package:
 
     conda create --name nextflow -c bioconda nextflow
 
-To [install Singularity](https://sylabs.io/guides/3.7/admin-guide/installation.html) on CentOS Linux:
+You can [install Apptainer](https://apptainer.org/docs/user/latest/quick_start.html#installation) by following the instructions for your platform.
 
-    sudo yum install singularity
-
-Now you can run the pipeline and it will download everything else it needs. Simply provide either a single image file or a directory containing image files.
+Now you can run the pipeline and it will download everything else it needs. Simply specify either a single image file or a directory containing image files.
 
 **For a single image file:**
 ```bash
     nextflow run JaneliaSciComp/nf-omezarr -profile singularity \
-        --input /path/to/image.czi --outdir ./output --cpus 40
+        --input /path/to/image.czi --outdir ./output 
 ```
 
 **For a directory containing multiple images:**
 ```bash
     nextflow run JaneliaSciComp/nf-omezarr -profile singularity \
-        --input /path/to/images/ --outdir ./output --cpus 40
+        --input /path/to/images/ --outdir ./output 
 ```
 
 The pipeline automatically detects all [Bioformats-compatible image files](https://docs.openmicroscopy.org/bio-formats/5.8.2/supported-formats.html) in the specified directory and processes each one. Supported formats include CZI, TIFF, LSM, ND2, LIF, IMS, VSI, and many others.
@@ -43,7 +48,9 @@ By default, the Zarr chunk size is set to 128,128,128. You can customize the chu
         --input /path/to/images/ --outdir ./output --chunk_size 1920,1920,1 
 ```
 
-This pipeline is [nf-core](https://nf-co.re/)-compatible and reuses pipeline infrastructure from the nf-core project, including the ability to use [nf-core institutional profiles](https://nf-co.re/configs/) that let you run on many university clusters without additional configuration. For example, to run this pipeline on the Janelia cluster: 
+The pipeline defaults to Blosc compression using LZ4 at compression level 6, which is the best all-around compression that we have found works for most types of microscopy data. You can customize this with the `--compression` and `--compression_properties` options. 
+
+This pipeline is [nf-core](https://nf-co.re/)-compatible and reuses pipeline infrastructure from the nf-core project, including the ability to use [nf-core institutional profiles](https://nf-co.re/configs/) that let you run on many university clusters without additional configuration. For example, to run this pipeline on the Janelia cluster, simply specify the Janelia profile: 
 
 ```bash
     nextflow run JaneliaSciComp/nf-omezarr -profile janelia \

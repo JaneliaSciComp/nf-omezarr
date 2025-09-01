@@ -26,7 +26,8 @@
                 "outdir": {
                     "type": "string",
                     "format": "directory-path",
-                    "description": "The output directory where the results will be saved. You have to use absolute paths to storage on Cloud infrastructure.",
+                    "description": "The output directory where the results will be saved.",
+                    "help_text": "An output zarr directory will be created in this directory for each input image file. You have to use an absolute path to storage on Cloud infrastructure.",
                     "fa_icon": "fas fa-folder-open"
                 },
                 "memo_dir": {
