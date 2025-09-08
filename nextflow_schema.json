@@ -1,6 +1,6 @@
 {
-    "$schema": "http://json-schema.org/draft-07/schema",
-    "$id": "https://raw.githubusercontent.com/nf/ngffconv/master/nextflow_schema.json",
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "https://raw.githubusercontent.com/JaneliaSciComp/nf-omezarr/main/nextflow_schema.json",
     "title": "OME-Zarr Converter",
     "description": "Convert images to OME-Zarr using bioformats2raw",
     "type": "object",
