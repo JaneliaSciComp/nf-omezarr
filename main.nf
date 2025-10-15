@@ -134,6 +134,15 @@ workflow TO_OMEZARR {
             new File(memo_path).mkdirs()
             [meta, imageFile.getAbsolutePath(), params.outdir, memo_path]
         }
+        .filter {
+            def meta = it[0]
+            def zarrFilePath = "${params.outdir}/${meta.id}.zarr"
+            if (new File(zarrFilePath).exists()) {
+                log.debug "Zarr file already exists for ID '${meta.id}' at: ${zarrFilePath}"
+                return false
+            }
+            return true
+        }
         .set { ch_input }
 
     // Convert to OME-Zarr
