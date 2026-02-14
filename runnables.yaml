@@ -1,7 +1,7 @@
 name: OME-Zarr Converter
 description: Convert Bio-Formats-compatible images to OME-Zarr using bioformats2raw
 version: "1.0"
-entryPoints:
+runnables:
   - id: convert
     name: Convert to OME-Zarr
     description: Convert image files or directories to OME-Zarr format
