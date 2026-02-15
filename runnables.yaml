@@ -74,6 +74,8 @@ runnables:
             description: Memory to allocate for each bioformats2raw task (e.g. 36.G)
             default: "36.G"
 
+    env:
+      NXF_SINGULARITY_CACHEDIR: ~/.singularity_cache
     resources:
       cpus: 1
       memory: "1 GB"
