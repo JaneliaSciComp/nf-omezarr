@@ -1,6 +1,8 @@
 name: OME-Zarr Converter
 description: Convert Bio-Formats-compatible images to OME-Zarr using bioformats2raw
 version: "1.0"
+requirements:
+  - nextflow
 runnables:
   - id: convert
     name: Convert to OME-Zarr
