@@ -1,0 +1,85 @@
+name: OME-Zarr Converter
+description: Convert Bio-Formats-compatible images to OME-Zarr using bioformats2raw
+version: "1.0"
+requirements:
+  - nextflow
+runnables:
+  - id: convert
+    name: Convert to OME-Zarr
+    description: Convert image files or directories to OME-Zarr format
+    command: nextflow run JaneliaSciComp/nf-omezarr -profile singularity
+    parameters:
+      - flag: --input
+        name: Input Path
+        type: file
+        description: Path to input image file or directory containing image files
+        required: true
+      - flag: --outdir
+        name: Output Directory
+        type: directory
+        description: Directory where converted OME-Zarr outputs will be saved
+        required: true
+      - flag: --overwrite
+        name: Overwrite Existing
+        type: boolean
+        description: Overwrite images in the output directory if they exist
+        default: false
+
+      - section: Zarr Options
+        parameters:
+          - flag: --chunk_size
+            name: Chunk Size
+            type: string
+            description: Zarr chunk size in X,Y,Z order
+            default: "128,128,128"
+          - flag: --compression
+            name: Compression
+            type: enum
+            description: Block compression algorithm
+            options:
+              - blosc
+              - zlib
+            default: blosc
+          - flag: --compression_properties
+            name: Compression Properties
+            type: string
+            description: Comma-delimited compression properties (e.g. cname=zstd,clevel=6)
+            default: "cname=zstd,clevel=6"
+
+      - section: Bioformats2raw Options
+        description: Optional tuning parameters for bioformats2raw
+        collapsed: true
+        parameters:
+          - flag: --unwrap
+            name: Unwrap Single Images
+            type: boolean
+            description: Unwrap single-image outputs by moving contents of '0' directory up one level
+            default: true
+          - flag: --bioformats2raw_opts
+            name: Extra Options
+            type: string
+            description: Additional bioformats2raw command-line options
+
+      - section: Resources
+        description: Resources per task
+        parameters:
+          - flag: --cpus
+            name: CPUs per Task
+            type: integer
+            description: Number of cores to allocate for each bioformats2raw task
+            default: 10
+            min: 1
+            max: 500
+          - flag: --memory
+            name: Memory per Task
+            type: string
+            description: Memory to allocate for each bioformats2raw task (e.g. 36.G)
+            default: "36.G"
+
+    env:
+      NXF_SINGULARITY_CACHEDIR: ~/.singularity_cache
+    resources:
+      cpus: 1
+      memory: "1 GB"
+      walltime: "24:00"
+
